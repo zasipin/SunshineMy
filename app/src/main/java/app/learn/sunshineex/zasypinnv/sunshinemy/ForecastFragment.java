@@ -1,5 +1,7 @@
 package app.learn.sunshineex.zasypinnv.sunshinemy;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,8 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -55,6 +59,23 @@ public class ForecastFragment extends Fragment {
                                                                 forecastData);
         ListView lv = (ListView)rootView.findViewById(R.id.listview_forecast);
         lv.setAdapter(mForecastAdapter);
+
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Context context = getContext();
+                String text = mForecastAdapter.getItem(i);
+                int duration = Toast.LENGTH_SHORT;
+
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT, text);
+                startActivity(intent);
+//                Toast toast = Toast.makeText(context, text, duration);
+//                toast.show();
+            }
+        });
+
         return rootView;
     }
 
@@ -74,6 +95,7 @@ public class ForecastFragment extends Fragment {
             task.execute("150000");
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
