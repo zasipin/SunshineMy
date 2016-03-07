@@ -2,9 +2,11 @@ package app.learn.sunshineex.zasypinnv.sunshinemy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +54,7 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        List<String> forecastData = CreateFakeList();
+        List<String> forecastData = new ArrayList<String>(); //CreateFakeList();
         mForecastAdapter = new ArrayAdapter<String>(getActivity(),
                                                                 R.layout.list_item_forecast,
                                                                 R.id.list_item_forecast_textview,
@@ -91,12 +93,29 @@ public class ForecastFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            FetchWeatherTask task = new FetchWeatherTask();
-            task.execute("150000");
+            updateWeather();
             return true;
         }
-
+        if (id == R.id.action_show_location_on_map)
+        {
+            openPrefferedLocationInMap();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
+    }
+
+    private void updateWeather()
+    {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = pref.getString(getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+        FetchWeatherTask task = new FetchWeatherTask();
+        task.execute(location);
     }
 
     private List<String> CreateFakeList()
@@ -120,7 +139,21 @@ public class ForecastFragment extends Fragment {
         return allForecasts;
     }
 
-
+    private void openPrefferedLocationInMap()
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String location = prefs.getString(getString(R.string.pref_location_key),
+                                          getString(R.string.pref_location_default));
+        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
+                .appendQueryParameter("q", location)
+                .build();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null)
+        {
+            startActivity(intent);
+        }
+    }
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
     {
@@ -193,7 +226,7 @@ public class ForecastFragment extends Fragment {
                 }
             }
 
-            WeatherDataParser weatherParser = new WeatherDataParser();
+            WeatherDataParser weatherParser = new WeatherDataParser(getActivity());
             try {
                 return weatherParser.getWeatherDataFromJson(forecastJsonStr, numDays);
             }

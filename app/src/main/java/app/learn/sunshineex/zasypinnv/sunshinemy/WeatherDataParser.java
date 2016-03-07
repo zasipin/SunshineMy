@@ -1,5 +1,10 @@
 package app.learn.sunshineex.zasypinnv.sunshinemy;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +17,12 @@ import java.util.GregorianCalendar;
  */
 public class WeatherDataParser {
     private final String LOG_TAG = WeatherDataParser.class.getSimpleName();
+    private Activity mContext;
 
+    public WeatherDataParser(Activity context)
+    {
+        mContext = context;
+    }
     /**
      * Given a string of the form returned by the api call:
      * http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7
@@ -46,7 +56,21 @@ public class WeatherDataParser {
     /**
      * Prepare the weather high/lows for presentation.
      */
+    /**
+     * Prepare the weather high/lows for presentation.
+     */
     private String formatHighLows(double high, double low) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String unitType = prefs.getString(mContext.getString(R.string.pref_units_list_key),
+                                          mContext.getString(R.string.pref_units_metric));
+
+        if (unitType.equals(mContext.getString(R.string.pref_units_imperial))) {
+            high = (high * 1.8) + 32;
+            low = (low * 1.8) + 32;
+        } else if (!unitType.equals(mContext.getString(R.string.pref_units_metric))) {
+            Log.d(LOG_TAG, "Unit type not found: " + unitType);
+        }
+
         // For presentation, assume the user doesn't care about tenths of a degree.
         long roundedHigh = Math.round(high);
         long roundedLow = Math.round(low);

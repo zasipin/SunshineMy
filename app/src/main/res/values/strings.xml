@@ -2,10 +2,30 @@
     <string name="app_name">SunshineMy</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_share">Share</string>
+    <string name="action_show_location_on_map">Show on map</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
+
+    <string name="pref_location_label">Location</string>
+    <string name="pref_location_key" translatable="false">location</string>
+    <string name="pref_location_default" translatable="false">Yaroslavl</string>
+
+    <string name="pref_units_list_title">Units</string>
+    <string name="pref_units_list_key">units</string>
+    <string name="pref_units_metric">0</string>
+    <string name="pref_units_imperial">1</string>
+    <string-array name="pref_units_list_titles">
+        <item>Metrics</item>
+        <item>Imperial</item>
+    </string-array>
+    <string-array name="pref_units_list_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
