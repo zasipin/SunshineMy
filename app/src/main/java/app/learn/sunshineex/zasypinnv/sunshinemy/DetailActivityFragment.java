@@ -20,7 +20,7 @@ public class DetailActivityFragment extends Fragment {
 
     private ShareActionProvider mShareActionProvider;
     private String mDetailedText;
-    private String appName = " #" + getString(R.string.app_name);
+    private String appName;
 
     public DetailActivityFragment() {
     }
@@ -34,6 +34,7 @@ public class DetailActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        appName = " #" + getString(R.string.app_name);
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
 
         Intent intent = getActivity().getIntent();
