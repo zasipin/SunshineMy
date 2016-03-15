@@ -40,6 +40,8 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        createLocationTable(sqLiteDatabase);
+
         final String SQL_CREATE_WEATHER_TABLE = "CREATE TABLE " + WeatherEntry.TABLE_NAME + " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
@@ -85,5 +87,24 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + LocationEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + WeatherEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
+    }
+
+    private void createLocationTable(SQLiteDatabase sqLiteDatabase)
+    {
+        final String SQL_CREATE_TABLE = "CREATE TABLE " + LocationEntry.TABLE_NAME + " (" +
+                // Why AutoIncrement here, and not above?
+                // Unique keys will be auto-generated in either case.  But for weather
+                // forecasting, it's reasonable to assume the user will want information
+                // for a certain date and all dates *following*, so the forecast data
+                // should be sorted accordingly.
+                LocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+
+                // the ID of the location entry associated with this weather data
+                LocationEntry.COLUMN_LOCATION_SETTING + " TEXT UNIQUE NOT NULL, " +
+                LocationEntry.COLUMN_CITY_NAME + " TEXT NOT NULL, " +
+                LocationEntry.COLUMN_COORD_LONG + " REAL NOT NULL, " +
+                LocationEntry.COLUMN_COORD_LAT + " REAL NOT NULL); ";
+
+        sqLiteDatabase.execSQL(SQL_CREATE_TABLE);
     }
 }
