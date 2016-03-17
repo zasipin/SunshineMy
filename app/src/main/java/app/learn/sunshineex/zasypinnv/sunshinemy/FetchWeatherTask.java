@@ -20,30 +20,30 @@ package app.learn.sunshineex.zasypinnv.sunshinemy;
  */
 
         import android.content.ContentValues;
-        import android.content.Context;
-        import android.content.SharedPreferences;
-        import android.net.Uri;
-        import android.os.AsyncTask;
-        import android.preference.PreferenceManager;
-        import android.text.format.Time;
-        import android.util.Log;
-        import android.widget.ArrayAdapter;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.text.format.Time;
+import android.util.Log;
+import android.widget.ArrayAdapter;
 
-        import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract.WeatherEntry;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import org.json.JSONArray;
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Vector;
 
-        import java.io.BufferedReader;
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.InputStreamReader;
-        import java.net.HttpURLConnection;
-        import java.net.URL;
-        import java.text.SimpleDateFormat;
-        import java.util.Date;
-        import java.util.Vector;
+import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract.WeatherEntry;
 
 public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
@@ -82,7 +82,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         SharedPreferences sharedPrefs =
                 PreferenceManager.getDefaultSharedPreferences(mContext);
         String unitType = sharedPrefs.getString(
-                mContext.getString(R.string.pref_units_key),
+                mContext.getString(R.string.pref_units_list_key),
                 mContext.getString(R.string.pref_units_metric));
 
         if (unitType.equals(mContext.getString(R.string.pref_units_imperial))) {
