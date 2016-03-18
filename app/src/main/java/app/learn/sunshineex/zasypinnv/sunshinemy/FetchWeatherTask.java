@@ -19,9 +19,10 @@ package app.learn.sunshineex.zasypinnv.sunshinemy;
  * limitations under the License.
  */
 
-        import android.content.ContentValues;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -40,9 +41,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
+import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract;
 import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract.WeatherEntry;
 
 public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
@@ -113,7 +116,57 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         // Students: First, check if the location with this city name exists in the db
         // If it exists, return the current ID
         // Otherwise, insert it using the content resolver and the base URI
-        return -1;
+        Uri baseLocationUri = WeatherContract.LocationEntry.CONTENT_URI;
+        Uri requestUri = baseLocationUri;
+//        if (cityName != null) {
+//            requestUri = baseLocationUri.buildUpon().appendQueryParameter(WeatherContract.LocationEntry.COLUMN_CITY_NAME, cityName).build();
+//        }
+//        else {
+//            if(lat != 0 || lon != 0)
+//            {
+//                requestUri = baseLocationUri.buildUpon().appendQueryParameter(WeatherContract.LocationEntry.COLUMN_COORD_LAT, Double.toString(lat))
+//                        .appendQueryParameter(WeatherContract.LocationEntry.COLUMN_COORD_LONG, Double.toString(lon)).build();
+//            }
+//        }
+
+        long locationId = -1;
+        String selection = "";
+        ArrayList<String> selectionArgs = new ArrayList<String>();
+
+
+        if (cityName != null) {
+            selection = WeatherContract.LocationEntry.COLUMN_CITY_NAME + " = ?";
+            selectionArgs.add(cityName);
+        }
+//        if (lat != 0 || lon != 0)
+//        {
+//            if(selection != "")
+//                selection = selection + " or ";
+//            selection = selection + WeatherContract.LocationEntry.COLUMN_COORD_LAT + " = ? and "
+//                        + WeatherContract.LocationEntry.COLUMN_COORD_LONG + " = ?";
+//            selectionArgs.add(Double.toString(lat));
+//            selectionArgs.add(Double.toString(lon));
+//        }
+
+        Cursor cursor = mContext.getContentResolver().query(requestUri,
+                null,
+                selection, selectionArgs.toArray(new String[]{}),
+                null);
+        if (cursor != null && cursor.moveToFirst())
+        {
+            int columnIndex = cursor.getColumnIndex(WeatherContract.LocationEntry._ID);
+            locationId = cursor.getLong(columnIndex);
+        } else {
+            ContentValues values = new ContentValues();
+            values.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING, locationSetting);
+            values.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME, cityName);
+            values.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, lon);
+            values.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT, lat);
+            Uri insertUri = mContext.getContentResolver().insert(requestUri, values);
+            locationId = Long.parseLong(insertUri.getPathSegments().get(1));
+        }
+
+        return locationId;
     }
 
     /*
