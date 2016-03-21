@@ -1,8 +1,8 @@
 package app.learn.sunshineex.zasypinnv.sunshinemy;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,21 +13,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
 
-    ArrayAdapter<String> mForecastAdapter;
+    ForecastAdapter mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -44,28 +43,42 @@ public class ForecastFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         List<String> forecastData = new ArrayList<String>(); //CreateFakeList();
-        mForecastAdapter = new ArrayAdapter<String>(getActivity(),
-                                                                R.layout.list_item_forecast,
-                                                                R.id.list_item_forecast_textview,
-                                                                forecastData);
+
+        // populate database
+        String locationSetting = Utility.getPreferredLocation(getActivity());
+
+        // Sort order:  Ascending, by date.
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                locationSetting, System.currentTimeMillis());
+
+        Cursor cur = getActivity().getContentResolver().query(weatherForLocationUri,
+                null, null, null, sortOrder);
+
+
+//        mForecastAdapter = new ForecastAdapter(getActivity(),
+//                R.layout.list_item_forecast,
+//                R.id.list_item_forecast_textview,
+//                forecastData);
+        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
         ListView lv = (ListView)rootView.findViewById(R.id.listview_forecast);
         lv.setAdapter(mForecastAdapter);
 
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Context context = getContext();
-                String text = mForecastAdapter.getItem(i);
-                int duration = Toast.LENGTH_SHORT;
-
-                Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, text);
-                startActivity(intent);
-//                Toast toast = Toast.makeText(context, text, duration);
-//                toast.show();
-            }
-        });
+//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Context context = getContext();
+//                String text = mForecastAdapter.getItem(i);
+//                int duration = Toast.LENGTH_SHORT;
+//
+//                Intent intent = new Intent(context, DetailActivity.class);
+//                intent.putExtra(Intent.EXTRA_TEXT, text);
+//                startActivity(intent);
+////                Toast toast = Toast.makeText(context, text, duration);
+////                toast.show();
+//            }
+//        });
 
         return rootView;
     }
@@ -103,8 +116,10 @@ public class ForecastFragment extends Fragment {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String location = pref.getString(getString(R.string.pref_location_key),
                 getString(R.string.pref_location_default));
-        FetchWeatherTask task = new FetchWeatherTask(getActivity(), mForecastAdapter);
+//        FetchWeatherTask task = new FetchWeatherTask(getActivity(), mForecastAdapter);
+        FetchWeatherTask task = new FetchWeatherTask(getActivity());
         task.execute(location);
+//        task.execute(location);
     }
 
     private List<String> CreateFakeList()
