@@ -12,6 +12,9 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String mLocation = "";
+    public static final String  FORECASTFRAGMENT_TAG = "ForecastFragment";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,23 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        mLocation = Utility.getPreferredLocation(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String location = Utility.getPreferredLocation(this);
+        if(location != null && !location.equalsIgnoreCase(mLocation))
+        {
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if(ff != null) {
+                ff.onLocationChanged();
+            }
+            mLocation = location;
+        }
     }
 
     @Override
