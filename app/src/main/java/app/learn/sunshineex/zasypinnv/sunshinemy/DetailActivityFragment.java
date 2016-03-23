@@ -1,5 +1,6 @@
 package app.learn.sunshineex.zasypinnv.sunshinemy;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -110,16 +111,57 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        String text = convertCursorRowToUXFormat(data);
-        TextView detail_text = (TextView)getView().findViewById(R.id.detail_text);
-        mDetailedText = text + appName;
-        detail_text.setText(text);
-
+        setTextViews(data);
         if (mShareActionProvider != null)
         {
-            createShareIntent(text);
+            createShareIntent(mDetailedText);
         }
 //        data.close();
+    }
+
+    private void setTextViews(Cursor cursor)
+    {
+        Context context = getContext();
+        String text = convertCursorRowToUXFormat(cursor);
+//        TextView detail_text = (TextView)getView().findViewById(R.id.detail_text);
+//        mDetailedText = text + appName;
+        mDetailedText = text;
+//        detail_text.setText(text);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            TextView dateDayText = (TextView) getView().findViewById(R.id.detail_date_day_textview);
+            long date = cursor.getLong(ForecastProjection.COL_WEATHER_DATE);
+            dateDayText.setText(Utility.getDayName(context, date));
+
+            TextView dateText = (TextView) getView().findViewById(R.id.detail_date_textview);
+            dateText.setText(Utility.getFormattedMonthDay(context, date));
+
+            TextView highText = (TextView) getView().findViewById(R.id.detail_high_textview);
+            double high = cursor.getDouble(ForecastProjection.COL_WEATHER_MAX_TEMP);
+            highText.setText(context.getString(R.string.format_temperature, high));
+
+            TextView lowText = (TextView) getView().findViewById(R.id.detail_low_textview);
+            double low = cursor.getDouble(ForecastProjection.COL_WEATHER_MIN_TEMP);
+            lowText.setText(context.getString(R.string.format_temperature, low));
+
+            TextView weatherText = (TextView) getView().findViewById(R.id.detail_weather_textview);
+            String weather = cursor.getString(ForecastProjection.COL_WEATHER_DESC);
+            weatherText.setText(weather);
+
+            TextView humidityText = (TextView) getView().findViewById(R.id.detail_humidity_textview);
+            double humidity = cursor.getDouble(ForecastProjection.COL_HUMIDITY);
+            humidityText.setText(context.getString(R.string.format_humidity, humidity));
+
+
+            TextView windText = (TextView) getView().findViewById(R.id.detail_wind_textview);
+            double windDegrees = cursor.getDouble(ForecastProjection.COL_WIND_DEGREES);
+            double windSpeed = cursor.getDouble(ForecastProjection.COL_WIND_SPEED);
+            windText.setText(Utility.getFormattedWind(context, (float)windSpeed, (float)windDegrees));
+
+            TextView pressureText = (TextView) getView().findViewById(R.id.detail_pressure_textview);
+            double pressure = cursor.getDouble(ForecastProjection.COL_PRESSURE);
+            pressureText.setText(context.getString(R.string.format_pressure, pressure));
+        }
     }
 
     @Override
