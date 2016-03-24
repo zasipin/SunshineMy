@@ -28,6 +28,16 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private String appName;
     private int loaderId = 2;
 
+    TextView mDateDayText;
+    TextView mDateText;
+    TextView mHighText;
+    TextView mLowText;
+    TextView mWeatherText;
+    TextView mHumidityText;
+    TextView mWindText;
+    TextView mPressureText;
+
+
     public DetailActivityFragment() {
     }
 
@@ -42,6 +52,16 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                              Bundle savedInstanceState) {
         appName = " #" + getString(R.string.app_name);
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        mDateDayText =  (TextView) view.findViewById(R.id.detail_date_day_textview);
+        mDateText =     (TextView) view.findViewById(R.id.detail_date_textview);
+        mHighText =     (TextView) view.findViewById(R.id.detail_high_textview);
+        mLowText =      (TextView) view.findViewById(R.id.detail_low_textview);
+        mWeatherText =  (TextView) view.findViewById(R.id.detail_weather_textview);
+        mHumidityText = (TextView) view.findViewById(R.id.detail_humidity_textview);
+        mWindText =     (TextView) view.findViewById(R.id.detail_wind_textview);
+        mPressureText = (TextView) view.findViewById(R.id.detail_pressure_textview);
+
 
 //        Intent intent = getActivity().getIntent();
 //        String text = intent.getDataString();
@@ -129,38 +149,29 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 //        detail_text.setText(text);
 
         if (cursor != null && cursor.moveToFirst()) {
-            TextView dateDayText = (TextView) getView().findViewById(R.id.detail_date_day_textview);
             long date = cursor.getLong(ForecastProjection.COL_WEATHER_DATE);
-            dateDayText.setText(Utility.getDayName(context, date));
+            mDateDayText.setText(Utility.getDayName(context, date));
 
-            TextView dateText = (TextView) getView().findViewById(R.id.detail_date_textview);
-            dateText.setText(Utility.getFormattedMonthDay(context, date));
+            mDateText.setText(Utility.getFormattedMonthDay(context, date));
 
-            TextView highText = (TextView) getView().findViewById(R.id.detail_high_textview);
             double high = cursor.getDouble(ForecastProjection.COL_WEATHER_MAX_TEMP);
-            highText.setText(context.getString(R.string.format_temperature, high));
+            mHighText.setText(context.getString(R.string.format_temperature, high));
 
-            TextView lowText = (TextView) getView().findViewById(R.id.detail_low_textview);
             double low = cursor.getDouble(ForecastProjection.COL_WEATHER_MIN_TEMP);
-            lowText.setText(context.getString(R.string.format_temperature, low));
+            mLowText.setText(context.getString(R.string.format_temperature, low));
 
-            TextView weatherText = (TextView) getView().findViewById(R.id.detail_weather_textview);
             String weather = cursor.getString(ForecastProjection.COL_WEATHER_DESC);
-            weatherText.setText(weather);
+            mWeatherText.setText(weather);
 
-            TextView humidityText = (TextView) getView().findViewById(R.id.detail_humidity_textview);
             double humidity = cursor.getDouble(ForecastProjection.COL_HUMIDITY);
-            humidityText.setText(context.getString(R.string.format_humidity, humidity));
+            mHumidityText.setText(context.getString(R.string.format_humidity, humidity));
 
-
-            TextView windText = (TextView) getView().findViewById(R.id.detail_wind_textview);
             double windDegrees = cursor.getDouble(ForecastProjection.COL_WIND_DEGREES);
             double windSpeed = cursor.getDouble(ForecastProjection.COL_WIND_SPEED);
-            windText.setText(Utility.getFormattedWind(context, (float)windSpeed, (float)windDegrees));
+            mWindText.setText(Utility.getFormattedWind(context, (float)windSpeed, (float)windDegrees));
 
-            TextView pressureText = (TextView) getView().findViewById(R.id.detail_pressure_textview);
             double pressure = cursor.getDouble(ForecastProjection.COL_PRESSURE);
-            pressureText.setText(context.getString(R.string.format_pressure, pressure));
+            mPressureText.setText(context.getString(R.string.format_pressure, pressure));
         }
     }
 
