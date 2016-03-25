@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -36,6 +37,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     TextView mHumidityText;
     TextView mWindText;
     TextView mPressureText;
+    ImageView mIconView;
 
 
     public DetailActivityFragment() {
@@ -61,6 +63,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         mHumidityText = (TextView) view.findViewById(R.id.detail_humidity_textview);
         mWindText =     (TextView) view.findViewById(R.id.detail_wind_textview);
         mPressureText = (TextView) view.findViewById(R.id.detail_pressure_textview);
+        mIconView = (ImageView) view.findViewById(R.id.detail_weather_imageview);
 
 
 //        Intent intent = getActivity().getIntent();
@@ -149,6 +152,10 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 //        detail_text.setText(text);
 
         if (cursor != null && cursor.moveToFirst()) {
+
+            int weatherId = cursor.getInt(ForecastProjection.COL_WEATHER_CONDITION_ID);
+            mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
+
             long date = cursor.getLong(ForecastProjection.COL_WEATHER_DATE);
             mDateDayText.setText(Utility.getDayName(context, date));
 
