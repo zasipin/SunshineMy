@@ -124,12 +124,12 @@ public class ForecastAdapter extends CursorAdapter {
         {
             case VIEW_TYPE_TODAY :
             {
-                holder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(ForecastFragment.COL_WEATHER_CONDITION_ID));
+//                holder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(ForecastFragment.COL_WEATHER_CONDITION_ID));
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY :
             {
-                holder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(ForecastFragment.COL_WEATHER_CONDITION_ID));
+//                holder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(ForecastFragment.COL_WEATHER_CONDITION_ID));
                 break;
             }
         }

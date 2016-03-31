@@ -13,6 +13,13 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if (savedInstanceState == null)
+        {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.weather_detail_container, new DetailActivityFragment())
+                    .commit();
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

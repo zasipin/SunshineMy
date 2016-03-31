@@ -128,7 +128,9 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Intent intent = getActivity().getIntent();
 //            Uri uriString = Uri.parse(intent.getDataString());
-
+        if (intent == null || intent.getData() == null) {
+            return null;
+        }
         return new CursorLoader(getActivity(), intent.getData(), ForecastProjection.FORECAST_COLUMNS, null, null, null);
     }
 
