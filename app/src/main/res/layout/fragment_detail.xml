@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="app.learn.sunshineex.zasypinnv.sunshinemy.DetailActivityFragment"
-    tools:showIn="@layout/activity_detail">
+    tools:showIn="@layout/content_detail"
+    android:paddingTop="64dp">
 
 
         <LinearLayout
