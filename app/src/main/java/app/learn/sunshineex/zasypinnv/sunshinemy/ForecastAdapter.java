@@ -91,15 +91,6 @@ public class ForecastAdapter extends CursorAdapter {
             }
         }
 
-//        if (viewType == VIEW_TYPE_TODAY)
-//        {
-//                layoutId = R.layout.list_item_forecast_today;
-//        }
-//        else if (viewType == VIEW_TYPE_FUTURE_DAY)
-//        {
-//            layoutId = R.layout.list_item_forecast;
-//        }
-
         View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
 
         ViewHolder holder = new ViewHolder(view);
@@ -124,20 +115,20 @@ public class ForecastAdapter extends CursorAdapter {
         {
             case VIEW_TYPE_TODAY :
             {
-//                holder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(ForecastFragment.COL_WEATHER_CONDITION_ID));
+                holder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY :
             {
-//                holder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(ForecastFragment.COL_WEATHER_CONDITION_ID));
+                holder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 break;
             }
         }
 
         // Read weather icon ID from cursor
-        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_ID);
-        // Use placeholder image for now
-        holder.iconView.setImageResource(R.mipmap.ic_launcher);
+//        int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
+//        // Use placeholder image for now
+//        holder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
         // TODO Read date from cursor
         Long date = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);

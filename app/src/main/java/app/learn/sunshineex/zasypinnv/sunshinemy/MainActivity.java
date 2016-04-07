@@ -1,14 +1,18 @@
 package app.learn.sunshineex.zasypinnv.sunshinemy;
 
+//import android.app.FragmentTransaction;
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private String mLocation = "";
 //    public static final String  FORECASTFRAGMENT_TAG = "ForecastFragment";
@@ -24,15 +28,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
             setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         mLocation = Utility.getPreferredLocation(this);
 
@@ -67,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
             if(ff != null) {
                 ff.onLocationChanged();
             }
+
+            DetailActivityFragment df = (DetailActivityFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if ( null != df ) {
+                df.onLocationChanged(location);
+            }
+
             mLocation = location;
         }
     }
@@ -92,5 +93,72 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Helper function to show the details of a selected item, either by
+     * displaying a fragment in-place in the current UI, or starting a
+     * whole new activity in which it is displayed.
+     */
+    void showDetails(int index) {
+//        mCurCheckPosition = index;
+
+        if (mTwoPane)
+        {
+            // We can display everything in-place with fragments, so update
+            // the list to highlight the selected item and show the data.
+//            getListView().setItemChecked(index, true);
+
+            // Check what fragment is currently shown, replace if needed.
+            DetailActivityFragment details = (DetailActivityFragment)
+                    getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if (details == null)// || details.getShownIndex() != index) {
+                // Make new fragment to show this selection.
+                details = DetailActivityFragment.newInstance(index);
+
+                // Execute a transaction, replacing any existing fragment
+                // with this one inside the frame.
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                if (index == 0) {
+                    ft.replace(R.id.content_detail, details);
+                } else {
+                    ft.replace(R.id.weather_detail_container, details);
+                }
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ft.commit();
+
+        } else {
+            // Otherwise we need to launch a new activity to display
+            // the dialog fragment with selected text.
+            Intent intent = new Intent();
+            intent.setClass(this, DetailActivityFragment.class);
+            intent.putExtra("index", index);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onItemSelected(Uri contentUri) {
+        if (mTwoPane)
+        {
+            Bundle args = new Bundle();
+            args.putParcelable(DetailActivityFragment.DETAIL_URI, contentUri);
+
+            DetailActivityFragment fragment = new DetailActivityFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        }
+        else
+        {
+            // Otherwise we need to launch a new activity to display
+            // the dialog fragment with selected text.
+            Intent intent = new Intent();
+            intent.setClass(this, DetailActivityFragment.class);
+            intent.setData(contentUri);
+            startActivity(intent);
+        }
     }
 }

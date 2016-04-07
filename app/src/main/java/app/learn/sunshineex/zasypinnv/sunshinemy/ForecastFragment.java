@@ -34,6 +34,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     ForecastAdapter mForecastAdapter;
     int loaderId = 0;
+    int mPosition;
     Cursor cur;
 
     private static final String[] FORECAST_COLUMNS = {
@@ -112,12 +113,17 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if(cursor != null){
                     String locationSettings = Utility.getPreferredLocation(getActivity());
-                    Intent intent = new Intent(getActivity(), DetailActivity.class);
-                    intent.setData(WeatherContract.WeatherEntry
-                                    .buildWeatherLocationWithDate(locationSettings, cursor.getLong(COL_WEATHER_DATE)));
+//                    Intent intent = new Intent(getActivity(), DetailActivity.class);
+//                    intent.setData(WeatherContract.WeatherEntry
+//                                    .buildWeatherLocationWithDate(locationSettings, cursor.getLong(COL_WEATHER_DATE)));
+//
+//                    startActivity(intent);
 
-                    startActivity(intent);
+                    ((Callback) getActivity())
+                            .onItemSelected(WeatherContract.WeatherEntry
+                                    .buildWeatherLocationWithDate(locationSettings, cursor.getLong(COL_WEATHER_DATE)));
                 }
+                mPosition = position;
             }
         });
 
@@ -255,144 +261,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
     }
 
-//    public class FetchWeatherTask extends AsyncTask<String, Void, String[]>
-//    {
-//        private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
-//
-//        private String[] CallForecast(String postalCode)
-//        {
-//            // These two need to be declared outside the try/catch
-//            // so that they can be closed in the finally block.
-//            HttpURLConnection urlConnection = null;
-//            BufferedReader reader = null;
-//            int numDays = 7;
-//
-//            // Will contain the raw JSON response as a string.
-//            String forecastJsonStr = null;
-//
-//            try {
-//                // Construct the URL for the OpenWeatherMap query
-//                // Possible parameters are avaiable at OWM's forecast API page, at
-//                // http://openweathermap.org/API#forecast
-//                //URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=150000&mode=json&units=metric&cnt=7&appid=61c0547f277bf21ab39a9567aa4bbdd4");
-//
-//                URL url = this.ConstructUrl(postalCode);
-//
-//                // Create the request to OpenWeatherMap, and open the connection
-//                urlConnection = (HttpURLConnection) url.openConnection();
-//                urlConnection.setRequestMethod("GET");
-//                urlConnection.connect();
-//
-//                // Read the input stream into a String
-//                InputStream inputStream = urlConnection.getInputStream();
-//                StringBuffer buffer = new StringBuffer();
-//                if (inputStream == null) {
-//                    // Nothing to do.
-//                    return null;
-//                }
-//                reader = new BufferedReader(new InputStreamReader(inputStream));
-//
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-//                    // But it does make debugging a *lot* easier if you print out the completed
-//                    // buffer for debugging.
-//                    buffer.append(line + "\n");
-//                }
-//
-//                if (buffer.length() == 0) {
-//                    // Stream was empty.  No point in parsing.
-//                    return null;
-//                }
-//                forecastJsonStr = buffer.toString();
-//
-////                Log.v(LOG_TAG, "Forecast JSON string: " + forecastJsonStr);
-//
-//            } catch (IOException e) {
-//                Log.e(LOG_TAG, "Error ", e);
-//                // If the code didn't successfully get the weather data, there's no point in attemping
-//                // to parse it.
-//                return null;
-//            } finally{
-//                if (urlConnection != null) {
-//                    urlConnection.disconnect();
-//                }
-//                if (reader != null) {
-//                    try {
-//                        reader.close();
-//                    } catch (final IOException e) {
-//                        Log.e(LOG_TAG, "Error closing stream", e);
-//                    }
-//                }
-//            }
-//
-//            WeatherDataParser weatherParser = new WeatherDataParser(getActivity());
-//            try {
-//                return weatherParser.getWeatherDataFromJson(forecastJsonStr, numDays);
-//            }
-//            catch (JSONException ex)
-//            {
-//                Log.e(LOG_TAG, ex.getMessage(), ex);
-//                ex.printStackTrace();
-//                return null;
-//            }
-//        }
-//
-//        private URL ConstructUrl(String postalCode)
-//        {
-//            String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily";
-//            String mode = "json";
-//            String units = "metric";
-//            String cnt = "7";
-//            String appid = "61c0547f277bf21ab39a9567aa4bbdd4";
-//
-//            String QUERY_PARAM = "q";
-//            String FORMAT_PARAM = "mode";
-//            String UNITS_PARAM = "units";
-//            String DAYS_PARAM = "cnt";
-//            String APP_PARAM = "appid";
-//
-//                    //?q=150000&mode=json&units=metric&cnt=7&appid=61c0547f277bf21ab39a9567aa4bbdd4";
-//
-//            Uri uri = Uri.parse(baseUrl).buildUpon()
-//                .appendQueryParameter(QUERY_PARAM, postalCode)
-//                .appendQueryParameter(FORMAT_PARAM, mode)
-//                .appendQueryParameter(UNITS_PARAM, units)
-//                .appendQueryParameter(DAYS_PARAM, cnt)
-//                .appendQueryParameter(APP_PARAM, appid)
-//                    .build();
-//
-//            URL url;
-//            try {
-//               url = new URL(uri.toString());
-//            }
-//            catch (MalformedURLException ex)
-//            {
-//                throw new RuntimeException(ex);
-//            }
-//
-////            Log.v(LOG_TAG, "Built URI: " + uri.toString());
-//
-//            return url;
-//        }
-//
-//        @Override
-//        protected String[] doInBackground(String... params) {
-//            String[] str = null;
-//            if (params.length > 0) {
-//                str = CallForecast(params[0]);
-//            }
-//            return str;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String[] strings) {
-//            if (strings != null && strings.length > 0) {
-//                mForecastAdapter.clear();
-//                mForecastAdapter.addAll(strings);
-////                mForecastAdapter.notifyDataSetChanged();
-//            }
-////            super.onPostExecute(strings);
-//        }
-//    }
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Uri contentUri);
+    }
 }

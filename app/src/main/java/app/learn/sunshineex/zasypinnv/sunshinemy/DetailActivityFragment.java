@@ -3,6 +3,7 @@ package app.learn.sunshineex.zasypinnv.sunshinemy;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -19,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -27,7 +30,11 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private ShareActionProvider mShareActionProvider;
     private String mDetailedText;
     private String appName;
-    private int loaderId = 2;
+    private int DETAIL_LOADER = 2;
+
+    public static String DETAIL_URI = "detail_uri_date";
+
+    Uri mUri;
 
     TextView mDateDayText;
     TextView mDateText;
@@ -39,6 +46,25 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     TextView mPressureText;
     ImageView mIconView;
 
+
+    /**
+     * Create a new instance of DetailsFragment, initialized to
+     * show the text at 'index'.
+     */
+    public static DetailActivityFragment newInstance(int index) {
+        DetailActivityFragment f = new DetailActivityFragment();
+
+        // Supply index input as an argument.
+        Bundle args = new Bundle();
+        args.putInt("index", index);
+        f.setArguments(args);
+
+        return f;
+    }
+
+    public int getShownIndex() {
+        return getArguments().getInt("index", 0);
+    }
 
     public DetailActivityFragment() {
     }
@@ -52,6 +78,23 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (container == null) {
+            // We have different layouts, and in one of them this
+            // fragment's containing frame doesn't exist.  The fragment
+            // may still be created from its saved state, but there is
+            // no reason to try to create its view hierarchy because it
+            // won't be displayed.  Note this is not needed -- we could
+            // just run the code below, where we would create and return
+            // the view hierarchy; it would just never be used.
+            return null;
+        }
+
+        Bundle args = getArguments();
+        if (args != null)
+        {
+            mUri = args.getParcelable(DetailActivityFragment.DETAIL_URI);
+        }
+
         appName = " #" + getString(R.string.app_name);
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
 
@@ -78,7 +121,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(loaderId, null, this);
+        getLoaderManager().initLoader(DETAIL_LOADER, null, this);
     }
 
     @Override
@@ -126,12 +169,16 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Intent intent = getActivity().getIntent();
-//            Uri uriString = Uri.parse(intent.getDataString());
-        if (intent == null || intent.getData() == null) {
-            return null;
+//        Intent intent = getActivity().getIntent();
+//        if (intent == null || intent.getData() == null) {
+//            return null;
+//        }
+//        return new CursorLoader(getActivity(), intent.getData(), ForecastProjection.FORECAST_COLUMNS, null, null, null);
+        if(mUri != null)
+        {
+            return new CursorLoader(getActivity(), mUri, ForecastProjection.FORECAST_COLUMNS, null, null, null);
         }
-        return new CursorLoader(getActivity(), intent.getData(), ForecastProjection.FORECAST_COLUMNS, null, null, null);
+        return null;
     }
 
     @Override
@@ -212,5 +259,16 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                     " - " + highAndLow;
         }
         return "";
+    }
+
+    void onLocationChanged( String newLocation ) {
+        // replace the uri, since the location has changed
+        Uri uri = mUri;
+        if (null != uri) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mUri = updatedUri;
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
     }
 }
