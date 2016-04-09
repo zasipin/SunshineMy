@@ -105,6 +105,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
         ListView lv = (ListView)rootView.findViewById(R.id.listview_forecast);
+//        lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         lv.setAdapter(mForecastAdapter);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,6 +127,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 mPosition = position;
             }
         });
+
+
 
 
 
