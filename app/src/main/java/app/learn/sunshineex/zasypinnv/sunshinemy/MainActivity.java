@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             // Otherwise we need to launch a new activity to display
             // the dialog fragment with selected text.
             Intent intent = new Intent();
-            intent.setClass(this, DetailActivityFragment.class);
+            intent.setClass(this, DetailActivity.class);
             intent.setData(contentUri);
             startActivity(intent);
         }
