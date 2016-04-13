@@ -38,6 +38,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     Cursor cur;
     ListView lv;
 
+    private boolean mUseTodayLayout;
+
     private String mPositionBundle = "position";
 
     private static final String[] FORECAST_COLUMNS = {
@@ -109,6 +111,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
 
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         lv = (ListView)rootView.findViewById(R.id.listview_forecast);
         lv.setAdapter(mForecastAdapter);
 
@@ -269,6 +272,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if (intent.resolveActivity(getActivity().getPackageManager()) != null)
         {
             startActivity(intent);
+        }
+    }
+
+    public void setUseTodayLayout(boolean useTodayLayout)
+    {
+        mUseTodayLayout = useTodayLayout;
+        if (mForecastAdapter != null)
+        {
+            mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         }
     }
 
