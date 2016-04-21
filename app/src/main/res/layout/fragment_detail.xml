@@ -121,6 +121,10 @@
                 android:id="@+id/detail_pressure_textview"
                 android:layout_marginTop="4dp" />
 
+            <app.learn.sunshineex.zasypinnv.sunshinemy.views.MyView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                ></app.learn.sunshineex.zasypinnv.sunshinemy.views.MyView>
         </LinearLayout>
 
 

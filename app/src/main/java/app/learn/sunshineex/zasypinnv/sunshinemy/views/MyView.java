@@ -1,6 +1,8 @@
 package app.learn.sunshineex.zasypinnv.sunshinemy.views;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -8,6 +10,10 @@ import android.view.View;
  * Created by ZasypinNV on 20.04.2016.
  */
 public class MyView extends View {
+
+    Paint mPaint;
+    float mPaintHeight;
+
     public MyView(Context context)
     {
         super(context);
@@ -21,6 +27,12 @@ public class MyView extends View {
     public MyView(Context context, AttributeSet attrs, int defaultStyle)
     {
         super(context, attrs, defaultStyle);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas)
+    {
+        canvas.drawCircle(10, 10, 30, mPaint);
     }
 
     @Override
@@ -42,5 +54,12 @@ public class MyView extends View {
             // wrap content
             myMeaseure = measureSpecSize;
         return myMeaseure;
+    }
+
+    private void init()
+    {
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setTextSize(mPaintHeight);
     }
 }
