@@ -34,7 +34,7 @@ public class SunshineService extends IntentService{
     private final Context mContext;
 
     public SunshineService(String name) {
-        super(name);
+        super("SunshineService");
         mContext = this;
     }
 
