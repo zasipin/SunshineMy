@@ -17,16 +17,19 @@ public class MyView extends View {
     public MyView(Context context)
     {
         super(context);
+        init();
     }
 
     public MyView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public MyView(Context context, AttributeSet attrs, int defaultStyle)
     {
         super(context, attrs, defaultStyle);
+        init();
     }
 
     @Override

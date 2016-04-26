@@ -34,7 +34,7 @@ public class SunshineService extends IntentService{
     private final String LOG_TAG = SunshineService.class.getSimpleName();
     private final Context mContext;
 
-    public SunshineService(String name) {
+    public SunshineService() {
         super("SunshineService");
         mContext = this;
     }
