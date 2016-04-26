@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import app.learn.sunshineex.zasypinnv.sunshinemy.Service.SunshineService;
 import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract;
 
 // for Loaders
@@ -229,13 +230,16 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void updateWeather()
     {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = pref.getString(getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
-//        FetchWeatherTask task = new FetchWeatherTask(getActivity(), mForecastAdapter);
-        FetchWeatherTask task = new FetchWeatherTask(getActivity());
-        task.execute(location);
+//        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        String location = pref.getString(getString(R.string.pref_location_key),
+//                getString(R.string.pref_location_default));
+
+//        FetchWeatherTask task = new FetchWeatherTask(getActivity());
 //        task.execute(location);
+
+
+        String location = Utility.getPreferredLocation(getActivity());
+        startSunhineService(location);
     }
 
     private List<String> CreateFakeList()
@@ -282,6 +286,16 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         {
             mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         }
+    }
+
+
+    private void startSunhineService(String location)
+    {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), SunshineService.class);
+        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, location);
+
+        getActivity().startService(intent);
     }
 
     /**

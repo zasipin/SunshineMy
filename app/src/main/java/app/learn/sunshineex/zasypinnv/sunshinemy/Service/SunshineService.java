@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import app.learn.sunshineex.zasypinnv.sunshinemy.FetchWeatherTask;
 import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract;
 
 /**
@@ -30,7 +29,9 @@ import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract;
  */
 public class SunshineService extends IntentService{
 
-    private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+    public static final String LOCATION_QUERY_EXTRA = "lqe";
+
+    private final String LOG_TAG = SunshineService.class.getSimpleName();
     private final Context mContext;
 
     public SunshineService(String name) {
@@ -40,7 +41,8 @@ public class SunshineService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
+        String locationQuery  = intent.getStringExtra(SunshineService.LOCATION_QUERY_EXTRA);
+        getData(locationQuery);
     }
 
     private void getData(String location)
