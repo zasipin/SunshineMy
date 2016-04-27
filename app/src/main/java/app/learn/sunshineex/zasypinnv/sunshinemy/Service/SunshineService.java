@@ -1,6 +1,7 @@
 package app.learn.sunshineex.zasypinnv.sunshinemy.Service;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -339,5 +340,18 @@ public class SunshineService extends IntentService{
         }
 
         return locationId;
+    }
+
+    static public class AlarmReciever extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String location  = intent.getStringExtra(SunshineService.LOCATION_QUERY_EXTRA);
+            Intent serviceIntent = new Intent();
+            serviceIntent.setClass(context, SunshineService.class);
+            serviceIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, location);
+
+            context.startService(serviceIntent);
+        }
     }
 }

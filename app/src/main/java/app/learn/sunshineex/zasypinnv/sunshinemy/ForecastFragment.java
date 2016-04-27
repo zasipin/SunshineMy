@@ -1,10 +1,14 @@
 package app.learn.sunshineex.zasypinnv.sunshinemy;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -291,11 +295,32 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void startSunhineService(String location)
     {
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), SunshineService.class);
+        setAlarm(location);
+
+//        Intent intent = new Intent();
+//        intent.setClass(getActivity(), SunshineService.class);
+//        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, location);
+//
+//        getActivity().startService(intent);
+
+    }
+
+
+    private void setAlarm(String location)
+    {
+        AlarmManager alarmMgr;
+        PendingIntent alarmIntent;
+        Context context = getActivity();
+
+        alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, SunshineService.AlarmReciever.class);
         intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, location);
 
-        getActivity().startService(intent);
+        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() +
+                        5 * 1000, alarmIntent);
     }
 
     /**
