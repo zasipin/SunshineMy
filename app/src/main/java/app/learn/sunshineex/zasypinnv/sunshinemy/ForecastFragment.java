@@ -29,6 +29,7 @@ import java.util.List;
 
 import app.learn.sunshineex.zasypinnv.sunshinemy.Service.SunshineService;
 import app.learn.sunshineex.zasypinnv.sunshinemy.data.WeatherContract;
+import app.learn.sunshineex.zasypinnv.sunshinemy.sync.SunshineSyncAdapter;
 
 // for Loaders
 
@@ -242,8 +243,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //        task.execute(location);
 
 
-        String location = Utility.getPreferredLocation(getActivity());
-        startSunhineService(location);
+        SunshineSyncAdapter.syncImmediately(getContext());
+
+//        String location = Utility.getPreferredLocation(getActivity());
+//        startSunhineService(location);
     }
 
     private List<String> CreateFakeList()

@@ -7,6 +7,8 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_settings">Settings</string>
 
+
+
     <!-- Date label when displaying today's weather forecast [CHAR LIMIT=20] -->
     <string name="today">Today</string>
     <!-- Date label when displaying tomorrow's weather forecast [CHAR LIMIT=20] -->
@@ -113,4 +115,10 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
+
+    <!-- Account type (for sync-adapter authenticator) -->
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">sunshine.learn.app</string>
+    <string name="content_authority">app.learn.sunshineex.zasypinnv.sunshinemy</string>
 </resources>
