@@ -42,8 +42,8 @@ public class SunshineService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        String locationQuery  = intent.getStringExtra(SunshineService.LOCATION_QUERY_EXTRA);
-        getData(locationQuery);
+//        String locationQuery  = intent.getStringExtra(SunshineService.LOCATION_QUERY_EXTRA);
+//        getData(locationQuery);
     }
 
     private void getData(String location)
