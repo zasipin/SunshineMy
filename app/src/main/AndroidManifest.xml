@@ -48,17 +48,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
-        <!--<provider-->
-            <!--android:authorities="app.learn.sunshineex.zasypinnv.sunshinemy"-->
-            <!--android:name=".data.WeatherProvider">-->
 
-        <!--</provider>-->
+        <provider
+            android:authorities="@string/content_authority"
+            android:name=".data.WeatherProvider"
+            android:exported="false"
+            android:syncable="true" />
 
-        <service android:name=".Service.SunshineService">
+        <!--<service android:name=".Service.SunshineService">-->
 
-        </service>
-        
-        <receiver android:name=".Service.SunshineService$AlarmReciever" />
+        <!--</service>-->
+        <!---->
+        <!--<receiver android:name=".Service.SunshineService$AlarmReciever" />-->
         
         <!-- SyncAdapter's dummy authentication service -->
         <service
@@ -83,11 +84,6 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <provider
-            android:authorities="@string/content_authority"
-            android:name=".data.WeatherProvider"
-            android:exported="false"
-            android:syncable="true" />
     </application>
 
 </manifest>
