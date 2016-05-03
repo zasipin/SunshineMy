@@ -449,7 +449,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                         Utility.formatTemperature(context, low));
 
                 //build your notification here.
-
+                showNotification();
 
                 //refreshing last sync
                 SharedPreferences.Editor editor = prefs.edit();
@@ -457,6 +457,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 editor.commit();
             }
         }
+    }
+
+    void showNotification()
+    {
 
     }
 }
