@@ -44,7 +44,10 @@ public class Utility {
 
 
     public static String formatTemperature(Context context, double temperature) {
-        return context.getString(R.string.format_temperature, temperature);
+        if ( !isMetric(context) ) {
+            temperature = 9*temperature/5+32;
+        }
+        return String.format(context.getString(R.string.format_temperature), temperature);
     }
 
 //    static String formatTemperature(double temperature, boolean isMetric) {
