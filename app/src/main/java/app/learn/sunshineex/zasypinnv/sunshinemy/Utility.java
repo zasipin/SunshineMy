@@ -43,7 +43,7 @@ public class Utility {
     }
 
 
-    static String formatTemperature(Context context, double temperature) {
+    public static String formatTemperature(Context context, double temperature) {
         return context.getString(R.string.format_temperature, temperature);
     }
 

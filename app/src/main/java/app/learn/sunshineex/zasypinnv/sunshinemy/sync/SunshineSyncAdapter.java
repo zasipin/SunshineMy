@@ -509,6 +509,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
     void showNotification()
     {
+        
     }
 
 }
