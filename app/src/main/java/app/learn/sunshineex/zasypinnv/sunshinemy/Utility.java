@@ -42,6 +42,11 @@ public class Utility {
         return context.getString(R.string.format_temperature, temp);
     }
 
+
+    static String formatTemperature(Context context, double temperature) {
+        return context.getString(R.string.format_temperature, temperature);
+    }
+
 //    static String formatTemperature(double temperature, boolean isMetric) {
 //        double temp;
 //        if ( !isMetric ) {
