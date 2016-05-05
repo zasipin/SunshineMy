@@ -182,7 +182,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //        }
         if (id == R.id.action_show_location_on_map)
         {
-            openPrefferedLocationInMap();
+            openPreferredLocationInMap();
         }
         return super.onOptionsItemSelected(item);
     }
