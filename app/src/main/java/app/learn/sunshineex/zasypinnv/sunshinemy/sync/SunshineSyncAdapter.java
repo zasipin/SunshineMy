@@ -553,9 +553,11 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     void deleteOldDates(Context context)
     {
         Calendar rightNow = Calendar.getInstance();
-        rightNow.add(Calendar.DAY_OF_MONTH, -1);
+        rightNow.add(Calendar.DATE, -1); // yesterday date
         Date yesterday = rightNow.getTime();
-        String yesterdayString = Utility.getFormattedMonthDay(context, yesterday.getTime());
+//        String yesterdayDate = WeatherContract.getDbDateString(cal.getTime());
+//        String yesterdayString = Utility.getFormattedMonthDay(context, yesterday.getTime());
+        String yesterdayString = String.valueOf(yesterday.getTime());
         String whereString = WeatherContract.WeatherEntry.COLUMN_DATE + " < ?";
         String[] args = new String[] { yesterdayString };
         context.getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
