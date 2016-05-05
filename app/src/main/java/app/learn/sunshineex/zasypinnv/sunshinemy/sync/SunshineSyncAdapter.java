@@ -38,6 +38,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import app.learn.sunshineex.zasypinnv.sunshinemy.MainActivity;
@@ -306,6 +308,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
                 mContext.getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
+                deleteOldDates(mContext);
                 notifyWeather();
             }
 
@@ -547,4 +550,15 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
+    void deleteOldDates(Context context)
+    {
+        Calendar rightNow = Calendar.getInstance();
+        rightNow.add(Calendar.DAY_OF_MONTH, -1);
+        Date yesterday = rightNow.getTime();
+        String yesterdayString = Utility.getFormattedMonthDay(context, yesterday.getTime());
+        String whereString = WeatherContract.WeatherEntry.COLUMN_DATE + " < ?";
+        String[] args = new String[] { yesterdayString };
+        context.getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
+                whereString, args);
+    }
 }
