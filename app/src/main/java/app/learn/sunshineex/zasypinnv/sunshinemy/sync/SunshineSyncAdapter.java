@@ -308,7 +308,15 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
                 mContext.getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
+
+                // instructor's variant
+                // delete old data so we don't build up an endless history
+//                getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
+//                WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?",
+//                new String[] {Long.toString(dayTime.setJulianDay(julianStartDay-1))});
+                // my variant
                 deleteOldDates(mContext);
+
                 notifyWeather();
             }
 
